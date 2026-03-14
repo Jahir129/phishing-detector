@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<title>PhishGuard SOC Dashboard</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+<script src="https://kit.fontawesome.com/4ad8d5c6c1.js" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+<!-- LANDING PAGE -->
+
+<div id="landing-page">
+
+<div class="landing-content">
+
+<h1 class="landing-logo">PhishGuard</h1>
+
+<p id="typing-text"></p>
+
+<button id="enter-btn">Go Ahead →</button>
+
+</div>
+
+</div>
+
+
+<!-- MAIN SITE -->
+
+<div id="main-site" style="display:none;">
+
+<canvas id="matrix"></canvas>
+
+<div class="container">
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<div class="logo">
+
+<img src="assets/shield.svg" class="logo-img">
+
+<h2>PhishGuard</h2>
+
+</div>
+
+<ul>
+
+<li class="active" onclick="showSection('analyze',this)">
+<i class="fa-solid fa-magnifying-glass"></i> Analyze
+</li>
+
+<li onclick="showSection('headers',this)">
+<i class="fa-solid fa-envelope"></i> Header Analyzer
+</li>
+
+<li onclick="showSection('tips',this)">
+<i class="fa-solid fa-lightbulb"></i> Tips
+</li>
+
+<li onclick="showSection('about',this)">
+<i class="fa-solid fa-user-shield"></i> About
+</li>
+
+</ul>
+
+</div>
+
+
+<!-- MAIN PANEL -->
+
+<div class="main">
+
+<header>
+
+<h1>Phishing Email Detection</h1>
+<p>SOC style phishing detection dashboard</p>
+
+</header>
+
+
+<section id="analyze" class="section active">
+
+<div class="dashboard-grid">
+
+<!-- LEFT SIDE : EMAIL ANALYZER -->
+
+<div class="analysis-panel">
+
+<textarea id="emailInput" placeholder="Paste email content here..."></textarea>
+
+<button onclick="analyzeEmail()">Analyze Email</button>
+
+<div id="alertBanner" class="alert hidden">
+⚠ High Risk Phishing Email Detected
+</div>
+
+<div class="indicators">
+
+<h3>Indicators</h3>
+
+<ul id="indicators"></ul>
+
+</div>
+
+</div>
+
+
+<!-- RIGHT SIDE : THREAT PANEL -->
+
+<div class="threat-panel">
+
+<div class="gauge-container">
+<canvas id="threatGauge" width="200" height="200"></canvas>
+</div>
+
+<div class="result">
+
+<div class="card">
+<h3>Threat Score</h3>
+<p id="score">0</p>
+</div>
+
+<div class="card">
+<h3>Risk Level</h3>
+<p id="risk">SAFE</p>
+</div>
+
+</div>
+
+<div class="risk-grid">
+
+<div class="risk-card">
+<h4>Keyword Risk</h4>
+<p id="keywordRisk">0</p>
+</div>
+
+<div class="risk-card">
+<h4>URL Risk</h4>
+<p id="urlRisk">0</p>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- BOTTOM PANELS -->
+
+<div class="bottom-panels">
+
+<div class="timeline">
+
+<h3>Threat Timeline</h3>
+
+<ul id="timeline"></ul>
+
+</div>
+
+
+<div class="email-analysis">
+
+<h3>Email Breakdown</h3>
+
+<ul>
+
+<li>Links: <span id="linkCount">0</span></li>
+
+<li>Keywords: <span id="keywordCount">0</span></li>
+
+</ul>
+
+</div>
+
+
+<div id="react-soc-panel"></div>
+
+</div>
+
+</section>
+
+
+<!-- HEADER ANALYZER -->
+
+<section id="headers" class="section">
+
+<h2>Email Header Analyzer</h2>
+
+<textarea id="headerInput" placeholder="Paste email headers..."></textarea>
+
+<button onclick="analyzeHeaders()">Analyze Headers</button>
+
+<div class="indicators">
+<ul id="headerResults"></ul>
+</div>
+
+</section>
+
+
+<!-- TIPS -->
+
+<section id="tips" class="section">
+
+<h2>Phishing Awareness</h2>
+
+<div class="tips">
+
+<div class="tip">
+<i class="fa-solid fa-envelope-circle-check"></i>
+<p>Verify sender domain carefully</p>
+</div>
+
+<div class="tip">
+<i class="fa-solid fa-link-slash"></i>
+<p>Avoid clicking suspicious links</p>
+</div>
+
+<div class="tip">
+<i class="fa-solid fa-key"></i>
+<p>Never share passwords</p>
+</div>
+
+</div>
+
+<div class="radar"></div>
+
+</section>
+
+
+<!-- ABOUT -->
+
+<section id="about" class="section">
+
+<h2>About Project</h2>
+
+<p>
+PhishGuard is a cybersecurity project that detects phishing emails using heuristic analysis.
+</p>
+
+</section>
+
+
+</div>
+</div>
+</div>
+
+
+<script src="script.js"></script>
+
+<!-- React -->
+
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+<script type="text/babel" src="react-ui.js"></script>
+
+
+
+<script>
+
+const text="If you want to protect yourself from phishing attacks, you're in the right place.";
+
+let index=0;
+
+function typeEffect(){
+
+if(index<text.length){
+document.getElementById("typing-text").innerHTML+=text.charAt(index)
+index++
+setTimeout(typeEffect,40)
+}
+
+}
+
+typeEffect()
+
+document.getElementById("enter-btn").onclick=function(){
+
+document.getElementById("landing-page").style.display="none"
+document.getElementById("main-site").style.display="block"
+
+}
+
+</script>
+
+</body>
+</html>
